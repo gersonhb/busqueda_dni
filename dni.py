@@ -20,15 +20,14 @@ headers = {
     "User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 13310.93.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.133 Safari/537.36"
 }
 
-session = requests.session()
-front = session.get(url)
+session=requests.Session()
+front = session.get(url,headers=headers)
 csrf_token = re.findall(r'<input type="hidden" name="_token" value="(.*)"', front.text)[0]
-cookies = session.cookies
 
 data = {
     "nombres": nom, "apellido_p": apep, "apellido_m": apem, '_token': csrf_token
 }
-response = requests.post(url=url, data=data, headers=headers, cookies=cookies)
+response = session.post(url=url, data=data, headers=headers)
 lista = []
 
 if not(nom == "%%" and apep == None and apem == None):
@@ -50,10 +49,10 @@ if not(nom == "%%" and apep == None and apem == None):
 
             for i in range(cont):
                 lista.append({
-                    "dni": dni[i],
-                    "nombre": nombre[i],
-                    "apellido_p": apellido_p[i],
-                    "apellido_m": apellido_m[i]
+                    "DNI": dni[i],
+                    "Nombres": nombre[i],
+                    "Apellido Paterno": apellido_p[i],
+                    "Apellido Materno": apellido_m[i]
                 })
 
             df = pd.DataFrame(lista)
